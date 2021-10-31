@@ -93,12 +93,6 @@ async function run() {
       );
       res.json(result);
     });
-    //get all bookings
-    app.get("/allbookings", async (req, res) => {
-      const cursor = bookingsCollection.find({});
-      const bookings = await cursor.toArray();
-      res.json(bookings);
-    });
   } finally {
     //  await client.close();
   }
