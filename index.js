@@ -77,11 +77,27 @@ async function run() {
       res.json(bookings);
     });
     //Approve
-    app.get("/managebookings/:id", async (req, res) => {
+    app.put("/bookings/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const result = await bookingsCollection.findOne(query);
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateBooking = {
+        $set: {
+          status: "approved",
+        },
+      };
+      const result = await bookingsCollection.updateOne(
+        filter,
+        updateBooking,
+        options
+      );
       res.json(result);
+    });
+    //get all bookings
+    app.get("/allbookings", async (req, res) => {
+      const cursor = bookingsCollection.find({});
+      const bookings = await cursor.toArray();
+      res.json(bookings);
     });
   } finally {
     //  await client.close();
